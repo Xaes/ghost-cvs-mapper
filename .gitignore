@@ -131,3 +131,4 @@ yarn.lock
 .idea
 
 *.csv
+config.json
