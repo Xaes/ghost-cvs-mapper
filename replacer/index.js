@@ -61,8 +61,8 @@ export default class Replacer {
 
             const oldText = text;
 
-            text = text.replace(primaryExp, `<a href='${map.url}'>${map.primary}</a>`);
-            text = text.replace(secondaryExp, `<a href='${map.url}'>${map.secondary}</a>`);
+            text = text.replace(primaryExp, `<a href='${map.url}'>$2</a>`);
+            text = text.replace(secondaryExp, `<a href='${map.url}'>$2</a>`);
 
             const newText = text;
 
@@ -88,7 +88,7 @@ export default class Replacer {
     }
 
     _buildRegex(word) {
-        return new RegExp(`(?! <("[^"]*?"|'[^']*?'|[^'">])*>)\\b${word}+\\b`, "g");
+        return new RegExp(`(?! <("[^"]*?"|'[^']*?'|[^'">])*>)(\\b${word}+\\b)`, "gi");
     }
 
 }
