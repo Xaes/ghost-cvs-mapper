@@ -63,14 +63,12 @@ export default class Replacer {
 
             const oldText = text;
 
-            text = text.replace(primaryExp, `<a href='${map.url}'>$2</a>`);
-            text = text.replace(secondaryExp, `<a href='${map.url}'>$2</a>`);
-
-            const newText = text;
+            if(primaryExp.test(text)) text = text.replace(primaryExp, `<a href='${map.url}'>$2</a>`);
+            else text = text.replace(secondaryExp, `<a href='${map.url}'>$2</a>`);
 
             // Verify if a replacement was made.
 
-            if(newText !== oldText) this._registerReplacement(post, map.url);
+            if(text !== oldText) this._registerReplacement(post, map.url);
 
         })
 
@@ -94,7 +92,7 @@ export default class Replacer {
     }
 
     _buildRegex(word) {
-        return new RegExp(`(?! <("[^"]*?"|'[^']*?'|[^'">])*>)(\\b${word}+\\b)`, "gi");
+        return new RegExp(`(?! <("[^"]*?"|'[^']*?'|[^'">])*>)(\\b${word}+\\b)`, "i");
     }
 
 }
