@@ -2,6 +2,7 @@ import csv from "csv-parser";
 import fs from "fs";
 import fsPromise from "fs/promises";
 import prompt from "../prompts/get_csv";
+import stripBomStream from "strip-bom-stream";
 import { printError, printInfo } from "../utils";
 
 export default async () => {
@@ -27,6 +28,7 @@ export default async () => {
 
         fs.createReadStream(relativePath)
             .on("error", error => reject(error))
+            .pipe(stripBomStream())
             .pipe(csv())
             .on("data", row => {
                 data.push({
