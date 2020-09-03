@@ -19,10 +19,10 @@ export default class Replacer {
 
     _replacePost(post) {
         const root = parse(post.html);
-        return this._replaceNodes(root, post.url).toString();
+        return this._replaceNodes(root, post).toString();
     }
 
-    _replaceNodes(root, postUrl) {
+    _replaceNodes(root, post) {
 
         // Recursive function:
         // - If the current child node is a TextNode (only contains text) find/replace the text by links.
@@ -32,9 +32,9 @@ export default class Replacer {
         if(root && root.childNodes) {
             root.childNodes = root.childNodes.map(child => {
                 if (child instanceof TextNode && !child.isWhitespace) {
-                    return this._replaceText(child, postUrl);
+                    return this._replaceText(child, post);
                 } else if (child.tagName && child.tagName === "p") {
-                    return this._replaceNodes(child, postUrl);
+                    return this._replaceNodes(child, post);
                 } else {
                     return child;
                 }
@@ -45,13 +45,15 @@ export default class Replacer {
 
     }
 
-    _replaceText(textNode, postUrl) {
+    _replaceText(textNode, post) {
 
         let text = textNode.text;
 
         // Replacing each entry found on the text node.
 
         this.map.forEach(map => {
+
+            if (this.summary[post.url] && this.summary[post.url].includes(map.url)) return;
 
             const primaryExp = this._buildRegex(map.primary);
             const secondaryExp = this._buildRegex(map.secondary);
@@ -68,7 +70,7 @@ export default class Replacer {
 
             // Verify if a replacement was made.
 
-            if(newText !== oldText) this._registerReplacement(postUrl, map.url);
+            if(newText !== oldText) this._registerReplacement(post, map.url);
 
         })
 
@@ -79,12 +81,16 @@ export default class Replacer {
 
     }
 
-    _registerReplacement(postUrl, mapUrl) {
+    _registerReplacement(post, mapUrl) {
+
+        const postUrl = post.url;
+
         if(this.summary[postUrl]) {
             if(!this.summary[postUrl].includes(mapUrl)) {
                 this.summary[postUrl].push(mapUrl);
             }
         } else this.summary[postUrl] = [mapUrl];
+
     }
 
     _buildRegex(word) {
