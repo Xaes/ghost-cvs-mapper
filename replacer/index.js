@@ -57,7 +57,7 @@ export default class Replacer {
             // Don't replace if:
             // - Post is already on summary object (Prevents to add more than one link per post).
             // - If both URL's are the same (Prevents to insert a link that points to the same post).
-            // - If the URL of the current row of CSV is already present on the HTML string (Prevents to insert a
+            // - If the URL of the current row of CSV is already present on the HTML string (Prevents to insert a link
             //   if there is already another link that points to it).
 
             if (
