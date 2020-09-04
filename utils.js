@@ -22,7 +22,3 @@ export const validateKey = (key) => {
     if(key && /[0-9a-f]{24}:[0-9a-f]{64}/.test(key)) return true;
     else return chalk.red(`[ERROR]: Key must not be empty and it must have the following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters`);
 }
-
-export const toLink = (label, url) => {
-    return `<a href='${url}'>${label}</a>`;
-}

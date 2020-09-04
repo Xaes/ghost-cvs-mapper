@@ -1,4 +1,5 @@
 import { parse, TextNode } from "node-html-parser";
+import { formatUrl } from "../utils";
 
 export default class Replacer {
 
@@ -53,7 +54,17 @@ export default class Replacer {
 
         this.map.forEach(map => {
 
-            if (this.summary[post.url] && this.summary[post.url].includes(map.url)) return;
+            // Don't replace if:
+            // - Post is already on summary object (Prevents to add more than one link per post).
+            // - If both URL's are the same (Prevents to insert a link that points to the same post).
+            // - If the URL of the current row of CSV is already present on the HTML string (Prevents to insert a
+            //   if there is already another link that points to it).
+
+            if (
+                (this.summary[post.url] && this.summary[post.url].includes(map.url)) ||
+                formatUrl(map.url) === formatUrl(post.url) ||
+                post.html.indexOf(formatUrl(map.url)) >= 0
+            ) return;
 
             const primaryExp = this._buildRegex(map.primary);
             const secondaryExp = this._buildRegex(map.secondary);
