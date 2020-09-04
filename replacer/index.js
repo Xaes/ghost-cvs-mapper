@@ -63,7 +63,7 @@ export default class Replacer {
             if (
                 (this.summary[post.url] && this.summary[post.url].includes(map.url)) ||
                 formatUrl(map.url) === formatUrl(post.url) ||
-                post.html.indexOf(formatUrl(map.url)) >= 0
+                (post.html && post.html.indexOf(formatUrl(map.url)) >= 0)
             ) return;
 
             const primaryExp = this._buildRegex(map.primary);
